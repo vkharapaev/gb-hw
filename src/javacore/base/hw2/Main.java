@@ -1,6 +1,7 @@
 package javacore.base.hw2;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,6 +10,8 @@ public class Main {
         task3();
         task4();
         task5();
+        System.out.printf("task6: %s", checkBalance(new int[]{8, 8, 16}));
+        System.out.printf("task7: %s", Arrays.toString(rotate(new int[]{1, 2, 3}, 1)));
     }
 
     // 1. Задать целочисленный массив, состоящий из элементов 0 и 1. Например: [ 1, 1, 0, 0, 1, 0, 1, 1, 0, 0 ].
@@ -69,6 +72,47 @@ public class Main {
                 max = arr[i];
             }
         }
-        System.out.printf("task5: min = %d, max = %d\n", min, max);
+        System.out.printf("task5: %s, min = %d, max = %d\n", Arrays.toString(arr), min, max);
+    }
+
+    // 6. ** Написать метод, в который передается не пустой одномерный целочисленный массив, метод должен вернуть true,
+    // если в массиве есть место, в котором сумма левой и правой части массива равны. Примеры:
+    // checkBalance([2, 2, 2, 1, 2, 2, || 10, 1]) → true, checkBalance([1, 1, 1, || 2, 1]) → true,
+    // граница показана символами ||, эти символы в массив не входят.
+    private static boolean checkBalance(int[] arr) {
+        int leftSum = arr[0];
+        int rightSum = Arrays.stream(arr).sum() - arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (leftSum == rightSum) {
+                return true;
+            }
+            leftSum += arr[i];
+            rightSum -= arr[i];
+        }
+        return false;
+    }
+
+    // 7. **** Написать метод, которому на вход подается одномерный массив и число n (может быть положительным,
+    // или отрицательным), при этом метод должен сместить все элементы массива на n позиций. Элементы смещаются
+    // циклично. Для усложнения задачи нельзя пользоваться вспомогательными массивами. Примеры: [ 1, 2, 3 ] при n = 1
+    // (на один вправо) -> [ 3, 1, 2 ]; [ 3, 5, 6, 1] при n = -2 (на два влево) -> [ 6, 1, 3, 5 ]. При каком n в какую
+    // сторону сдвиг можете выбирать сами.
+    private static int[] rotate(int[] arr, int n) {
+        for (int j = 0; j < Math.abs(n); j++) {
+            if (n > 0) {
+                int tmp = arr[arr.length - 1];
+                for (int i = arr.length - 1; i > 0; i--) {
+                    arr[i] = arr[i - 1];
+                }
+                arr[0] = tmp;
+            } else {
+                int tmp = arr[0];
+                for (int i = 0; i < arr.length - 1; i++) {
+                    arr[i] = arr[i + 1];
+                }
+                arr[arr.length - 1] = tmp;
+            }
+        }
+        return arr;
     }
 }
