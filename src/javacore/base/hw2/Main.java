@@ -96,7 +96,7 @@ public class Main {
     }
 
     /**
-     * Сместить элементы массива на 1 вправо
+     * Сместить элементы массива на 1 влево
      */
     private static void rotate(int[] arr) {
         int tmp = arr[0];
