@@ -15,6 +15,10 @@ public class Animal {
         this.swimmingMaxDistance = swimmingMaxDistance;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void run(int distance) {
         if (distance > runningMaxDistance) {
             System.out.printf("Я %s. Я не могу пробежать %d м. Слишком длинная дистанция.\n", name, distance);
