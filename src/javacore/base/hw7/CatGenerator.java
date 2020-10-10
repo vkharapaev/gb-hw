@@ -1,12 +1,8 @@
 package javacore.base.hw7;
 
-import jdk.management.resource.internal.ResourceNatives;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 /**
  * Класс для генерации котов
