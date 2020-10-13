@@ -9,6 +9,8 @@ import java.util.Random;
  */
 public class CatGenerator {
 
+    public static final String CAT_NAME = "Cat %s";
+
     /**
      * @param count       Количество котов
      * @param minAppetite Минимальный аппетит
@@ -19,7 +21,7 @@ public class CatGenerator {
         Random random = new Random();
         for (int i = 1; i <= count; i++) {
             int appetite = random.nextInt(maxAppetite - minAppetite) + minAppetite;
-            cats.add(new Cat("Cat" + i, appetite));
+            cats.add(new Cat(String.format(CAT_NAME, i), appetite));
         }
         return cats;
     }

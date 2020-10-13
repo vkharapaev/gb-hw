@@ -15,7 +15,7 @@ public class Plate {
      * @return На сколько уменшилось количество еды в тарелке
      */
     public int decreaseFood(int n) {
-        int delta = Math.min(n, food);
+        int delta = Math.max(Math.min(n, food), 0);
         food -= delta;
         return delta;
     }
@@ -26,7 +26,7 @@ public class Plate {
      * @param n На сколько увеличить количество еды в тарелке
      */
     public void increaseFood(int n) {
-        food += n;
+        food += Math.max(n, 0);
     }
 
     public int availableFood() {
