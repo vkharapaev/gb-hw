@@ -1,9 +1,9 @@
 package javacore.base.hw8;
 
 import java.util.Random;
-import java.util.Scanner;
 
 public class Logic {
+
     static int SIZE;
     static int DOTS_TO_WIN;
 
@@ -13,27 +13,52 @@ public class Logic {
 
     static char[][] map;
     static boolean finishedGame;
+    private static EWinner winner;
+    static int[] winLine;
 
     static Random random = new Random();
 
+    enum EWinner {
+        HUMAN,
+        AI,
+        DRAW
+    }
+
+    public static void startNewGame(int fieldSize, int winningLength) {
+        Logic.SIZE = fieldSize;
+        Logic.DOTS_TO_WIN = winningLength;
+        finishedGame = false;
+        winLine = null;
+        initMap();
+    }
+
     public static void go() {
         finishedGame = true;
+
+        winner = EWinner.HUMAN;
         printMap();
         if (checkWinLines(DOT_X, DOTS_TO_WIN)) {
             System.out.println("Вы победитель!");
+            winLine = getWinLine(DOT_X);
             return;
         }
+
+        winner = EWinner.DRAW;
         if (isFull()) {
             System.out.println("Ничья!");
             return;
         }
 
+        winner = EWinner.AI;
         aiTurn();
         printMap();
         if (checkWinLines(DOT_O, DOTS_TO_WIN)) {
             System.out.println("Комьютер победил!");
+            winLine = getWinLine(DOT_O);
             return;
         }
+
+        winner = EWinner.DRAW;
         if (isFull()) {
             System.out.println("Ничья!");
             return;
@@ -42,6 +67,18 @@ public class Logic {
         finishedGame = false;
     }
 
+    public static EWinner getWinner() {
+        return winner;
+    }
+
+    /**
+     * Возвращает координаты первой и последней ячейки победной линии.
+     * Вызываеть после окончания игры.
+     *
+     */
+    public static int[] getWinLine() {
+        return winLine;
+    }
 
     static void initMap() {
         map = new char[SIZE][SIZE];
@@ -68,7 +105,7 @@ public class Logic {
     }
 
     static void humanTurn(int x, int y) {
-        if(isCellValid(y, x)){
+        if (isCellValid(y, x)) {
             map[y][x] = DOT_X;
             go();
         }
@@ -175,4 +212,33 @@ public class Logic {
         }
         return false;
     }
+
+    /**
+     * Возвращает координаты начальной и конечной ячейки победной линии, либо null, если
+     * победная линия не найдена.
+     */
+    private static int[] getWinLine(char dot) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (checkLine(i, j, 0, 1, dot, DOTS_TO_WIN)) {
+                    return createWinLine(i, j, 0, 1);
+                }
+                if (checkLine(i, j, 1, 0, dot, DOTS_TO_WIN)) {
+                    return createWinLine(i, j, 1, 0);
+                }
+                if (checkLine(i, j, 1, 1, dot, DOTS_TO_WIN)) {
+                    return createWinLine(i, j, 1, 1);
+                }
+                if (checkLine(i, j, -1, 1, dot, DOTS_TO_WIN)) {
+                    return createWinLine(i, j, -1, 1);
+                }
+            }
+        }
+        return null;
+    }
+
+    private static int[] createWinLine(int cy, int cx, int vy, int vx) {
+        return new int[]{cy, cx, cy + vy * (DOTS_TO_WIN - 1), cx + vx * (DOTS_TO_WIN - 1)};
+    }
+
 }

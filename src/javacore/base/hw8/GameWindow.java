@@ -24,22 +24,18 @@ public class GameWindow extends JFrame {
         JPanel panel = new JPanel(new GridLayout(1, 2));
         JButton buttonStartGame = new JButton("Start new game");
         panel.add(buttonStartGame);
-        buttonStartGame.addActionListener(e -> {
-            settingWindow.setVisible(true);
-        });
+        buttonStartGame.addActionListener(e -> settingWindow.setVisible(true));
 
         JButton buttonExit = new JButton("Exit");
         panel.add(buttonExit);
-        buttonExit.addActionListener(e -> {
-            System.exit(0);
-        });
+        buttonExit.addActionListener(e -> System.exit(0));
 
         add(panel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
-    public void startNewGame(int gameMode, int fieldSize, int winningLength){
+    public void startNewGame(int gameMode, int fieldSize, int winningLength) {
         battleField.startNewGame(gameMode, fieldSize, winningLength);
     }
 }
