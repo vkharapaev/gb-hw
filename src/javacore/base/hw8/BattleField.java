@@ -6,13 +6,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class BattleField extends JPanel {
+
     private GameWindow gameWindow;
     private int gameMode;
     private int fieldSize;
     private int winningLength;
-
     private boolean isInit;
-
     private int cellWidth;
     private int cellHeight;
 
@@ -24,20 +23,43 @@ public class BattleField extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                if (Logic.finishedGame) {
+                    return;
+                }
+
                 int cellX = e.getX() / cellWidth;
                 int cellY = e.getY() / cellHeight;
 
-                if (!Logic.finishedGame) {
-                    Logic.humanTurn(cellX, cellY);
-                    //проверить поледил кто нить или нет
-
-
-                }
+                Logic.humanTurn(cellX, cellY);
 
                 repaint();
+
+                if (Logic.finishedGame) {
+                    greetWinner();
+                }
+
             }
         });
+    }
 
+    private void greetWinner() {
+        String winnerGreeting;
+        switch (Logic.getWinner()) {
+            case HUMAN:
+                winnerGreeting = "Вы победитель!";
+                break;
+            case AI:
+                winnerGreeting = "Победил компьютер!";
+                break;
+            default:
+                winnerGreeting = "Победила дружба!";
+                break;
+        }
+        showMessage(winnerGreeting);
+    }
+
+    private void showMessage(String winnerGreeting) {
+        JOptionPane.showConfirmDialog(null, winnerGreeting, null, JOptionPane.DEFAULT_OPTION);
     }
 
     public void startNewGame(int gameMode, int fieldSize, int winningLength) {
@@ -49,11 +71,14 @@ public class BattleField extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+
         if (!isInit) {
             return;
         }
+
+        Graphics2D g = (Graphics2D) graphics;
 
         int panelWidth = getWidth();
         int panelHeight = getHeight();
@@ -75,27 +100,40 @@ public class BattleField extends JPanel {
             for (int j = 0; j < Logic.SIZE; j++) {
                 if (Logic.map[i][j] == Logic.DOT_X) {
                     drawX(g, j, i);
+                } else if (Logic.map[i][j] == Logic.DOT_O) {
+                    drawO(g, j, i);
                 }
-
-
             }
         }
 
-
+        if (Logic.getWinLine() != null) {
+            int[] winLine = Logic.getWinLine();
+            drawWinLine(g, winLine[1], winLine[0], winLine[3], winLine[2]);
+        }
     }
 
-    void drawX(Graphics g, int x, int y) {
+    void drawX(Graphics2D g, int x, int y) {
         g.setColor(Color.BLUE);
-        ((Graphics2D) g).setStroke(new BasicStroke(5));
+        g.setStroke(new BasicStroke(5));
         g.drawLine(x * cellWidth, y * cellHeight,
                 (x + 1) * cellWidth, (y + 1) * cellHeight);
+        g.drawLine((x + 1) * cellWidth, y * cellHeight,
+                x * cellWidth, (y + 1) * cellHeight);
     }
 
-    void drawO(Graphics g, int x, int y) {
+    void drawO(Graphics2D g, int x, int y) {
         g.setColor(Color.RED);
-        ((Graphics2D) g).setStroke(new BasicStroke(5));
-        g.drawOval(x * cellWidth, y * cellHeight,
-                cellWidth, cellHeight);
+        g.setStroke(new BasicStroke(5));
+        g.drawOval(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+    }
+
+    void drawWinLine(Graphics2D g, int x, int y, int x2, int y2) {
+        int halfW = cellWidth / 2;
+        int halfH = cellHeight / 2;
+        g.setColor(Color.GREEN);
+        g.setStroke(new BasicStroke(5));
+        g.drawLine(x * cellWidth + halfW, y * cellHeight + halfH,
+                x2 * cellWidth + halfW, y2 * cellHeight + halfH);
     }
 
 }

@@ -3,7 +3,7 @@ package javacore.base.hw8;
 import javax.swing.*;
 import java.awt.*;
 
-public class SettingWindow extends JFrame {
+public class SettingWindow extends JDialog {
     static final int WINDOW_X = GameWindow.WINDOW_X + 50;
     static final int WINDOW_Y = GameWindow.WINDOW_Y + 50;
     static final int WINDOW_WIDTH = GameWindow.WINDOW_WIDTH - 100;
@@ -25,6 +25,8 @@ public class SettingWindow extends JFrame {
     private JSlider slWinningLength;
 
     public SettingWindow(GameWindow gameWindow) {
+        super(gameWindow, true);
+
         this.gameWindow = gameWindow;
         setBounds(WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
         setTitle("Setting game");
@@ -71,10 +73,7 @@ public class SettingWindow extends JFrame {
             int fieldSize = slFieldSize.getValue();
             int winningLength = slWinningLength.getValue();
 
-            Logic.SIZE = fieldSize;
-            Logic.DOTS_TO_WIN = winningLength;
-            Logic.finishedGame = false;
-            Logic.initMap();
+            Logic.startNewGame(fieldSize, winningLength);
 
             gameWindow.startNewGame(gameMode, fieldSize, winningLength);
             setVisible(false);
