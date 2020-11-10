@@ -15,16 +15,14 @@ public class Main {
         }
 
         System.out.println("Unique words:");
-        for (Map.Entry<String, Integer> entry : wordFreqMap.entrySet()) {
-            if (entry.getValue() == 1) {
-                System.out.printf(" - %s\n", entry.getKey());
+        wordFreqMap.forEach((key, value) -> {
+            if (value == 1) {
+                System.out.printf(" - %s\n", key);
             }
-        }
+        });
 
         System.out.println("Word frequency:");
-        for (Map.Entry<String, Integer> entry : wordFreqMap.entrySet()) {
-            System.out.printf(" - %d: %s \n", entry.getValue(), entry.getKey());
-        }
+        wordFreqMap.forEach((key, value) -> System.out.printf(" - %d: %s \n", value, key));
     }
 
 }
