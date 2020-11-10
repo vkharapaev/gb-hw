@@ -1,8 +1,6 @@
 package javacore.advanced.hw3.task1;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
