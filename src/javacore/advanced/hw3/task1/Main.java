@@ -10,7 +10,8 @@ public class Main {
 
         Map<String, Integer> wordFreqMap = new HashMap<>();
         for (String word : wordList) {
-            wordFreqMap.compute(word, (k, count) -> count == null ? 1 : ++count);
+            Integer count = wordFreqMap.getOrDefault(word, 0);
+            wordFreqMap.put(word, ++count);
         }
 
         System.out.println("Unique words:");
