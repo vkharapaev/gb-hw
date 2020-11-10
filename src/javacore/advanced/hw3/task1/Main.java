@@ -1,5 +1,6 @@
 package javacore.advanced.hw3.task1;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,9 +10,9 @@ public class Main {
                 "linus", "torvalds", "to", "create", "a",
                 "linus", "torvalds", "to", "create", "a",};
 
-        Map<String, Integer> wordFreqMap = new LinkedHashMap<>();
+        Map<String, Integer> wordFreqMap = new HashMap<>();
         for (String word : wordList) {
-            wordFreqMap.compute(word, (k, v) -> v != null ? v + 1 : 1);
+            wordFreqMap.compute(word, (k, v) -> v != null ? ++v : 1);
         }
 
         System.out.println("Unique words:");

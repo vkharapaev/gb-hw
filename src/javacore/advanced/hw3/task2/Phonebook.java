@@ -28,7 +28,8 @@ public class Phonebook {
      * @return Collection of phone numbers that belong to the person
      */
     public Collection<String> get(String name) {
-        return Collections.unmodifiableSet(data.getOrDefault(normalize(name), Collections.emptySet()));
+        Set<String> phones = data.getOrDefault(normalize(name), Collections.emptySet());
+        return Collections.unmodifiableSet(phones);
     }
 
     private String normalize(String name) {
