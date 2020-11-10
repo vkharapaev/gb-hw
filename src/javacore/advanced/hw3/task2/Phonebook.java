@@ -25,7 +25,7 @@ public class Phonebook {
      * Get phone numbers by a person last name.
      *
      * @param name Person last name
-     * @return Collection of phone numbers that belong to the person
+     * @return Phone numbers that belong to the person
      */
     public Collection<String> get(String name) {
         Set<String> phones = data.getOrDefault(normalize(name), Collections.emptySet());
