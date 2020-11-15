@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="center" prefHeight="408.0" prefWidth="367.0" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javacore.advanced.hw4.task2.ui.main.CalcView">
+
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
+
+    <children>
+        <Label fx:id="expDisplay" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="no expression" />
+        <Label fx:id="display" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" minHeight="100.0" text="0">
+            <font>
+                <Font size="36.0" />
+            </font>
+        </Label>
+        <GridPane fx:id="buttons" gridLinesVisible="true" VBox.vgrow="ALWAYS">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="ALWAYS" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="ALWAYS" />
+                <RowConstraints vgrow="ALWAYS" />
+                <RowConstraints vgrow="ALWAYS" />
+                <RowConstraints vgrow="ALWAYS" />
+                <RowConstraints vgrow="ALWAYS" />
+            </rowConstraints>
+        </GridPane>
+    </children>
+</VBox>
