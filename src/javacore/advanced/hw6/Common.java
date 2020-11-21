@@ -1,9 +1,6 @@
 package javacore.advanced.hw6;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Scanner;
@@ -18,14 +15,14 @@ public class Common {
 
         // OUTPUT
         Thread thread = new Thread(() -> {
-            try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+            try (DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
                 Scanner scanner = new Scanner(System.in);
                 while (true) {
                     String message = scanner.nextLine();
                     if (EXIT.equalsIgnoreCase(message)) {
                         break;
                     }
-                    out.println(String.format("from %s: %s", side, message));
+                    out.writeUTF(String.format("from %s: %s", side, message));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -38,15 +35,13 @@ public class Common {
         thread.start();
 
         // INPUT
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+        try (DataInputStream in = new DataInputStream(socket.getInputStream())) {
             while (true) {
-                String message = in.readLine();
-                if (message == null) {
-                    System.out.println("Shutting down...");
-                    break;
-                }
+                String message = in.readUTF();
                 System.out.println(message);
             }
+        } catch (EOFException ignore) {
+            System.out.println("Shutting down...");
         } catch (SocketException e) {
             if (!e.getMessage().equalsIgnoreCase("Socket closed")) {
                 e.printStackTrace();
