@@ -1,6 +1,6 @@
 .idea/
 out/
-
+test/
 *.iml
 *.ipr
 *.iws
