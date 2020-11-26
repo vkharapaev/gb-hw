@@ -8,14 +8,14 @@ import java.util.List;
 
 public class MyServer {
 
-    private List<ClientHandler> clients;
+    private final List<ClientHandler> clients;
     private AuthService authService;
 
     public MyServer(int port) {
+        clients = new ArrayList<>();
         try (ServerSocket server = new ServerSocket(port)) {
             authService = new BaseAuthService();
             authService.start();
-            clients = new ArrayList<>();
             while (true) {
                 System.out.printf("The server is waiting for connections on %d port...\n", server.getLocalPort());
                 Socket socket = server.accept();

@@ -4,8 +4,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientHandler {
+
+    private static final int TIME_OUT = 120000;
 
     private final MyServer myServer;
     private final Socket socket;
@@ -15,42 +18,58 @@ public class ClientHandler {
 
     public ClientHandler(MyServer server, Socket socket) {
         try {
-            this.myServer = server;
             this.socket = socket;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
-            this.name = "";
-            new Thread(() -> {
-                try {
-                    authenticate();
-                    readMessages();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    closeConnection();
-                }
-            }).start();
         } catch (IOException e) {
             throw new RuntimeException("There is a problem during a client handler creation.");
         }
+
+        this.myServer = server;
+
+        Thread thread = new Thread(() -> {
+            try {
+                authenticate();
+                readMessages();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                closeConnection();
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     public String getName() {
         return name;
     }
 
+    private void setTimer() throws SocketException {
+        socket.setSoTimeout(TIME_OUT);
+    }
+
+    private void cancelTimer() throws SocketException {
+        socket.setSoTimeout(0);
+    }
+
     private void authenticate() throws IOException {
+        setTimer();
         while (true) {
             String str = in.readUTF();
             if (str.startsWith("/auth")) {
-                String[] parts = str.split("\\s");
-                String nick = myServer.getAuthService().getNickByLoginPass(parts[1], parts[2]);
+                String[] parts = str.split("\\s", 3);
+                String nick = null;
+                if (parts.length == 3) {
+                    nick = myServer.getAuthService().getNickByLoginPass(parts[1], parts[2]);
+                }
                 if (nick != null) {
                     if (!myServer.isNickBusy(nick)) {
                         sendMsg("/authok " + nick);
                         name = nick;
                         myServer.broadcastMsg(name + " entered the chat");
                         myServer.subscribe(this);
+                        cancelTimer();
                         return;
                     } else {
                         sendMsg("The account is already in use.");
@@ -71,10 +90,10 @@ public class ClientHandler {
                     return;
                 }
                 if (str.startsWith("/w ")) {
-                    int space2Idx = Math.max(str.indexOf(" ", 3), 3);
-                    String nick = str.substring(3, space2Idx);
-                    String msg = str.substring(space2Idx + 1);
-                    myServer.sendMsgToClient(this, nick, msg);
+                    String[] parts = str.split("\\s", 3);
+                    if (parts.length == 3) {
+                        myServer.sendMsgToClient(this, parts[1], parts[2]);
+                    }
                 }
                 continue;
             }
@@ -90,13 +109,21 @@ public class ClientHandler {
         }
     }
 
+    private boolean isAuthorized() {
+        return name != null;
+    }
+
     private void closeConnection() {
-        myServer.unsubscribe(this);
-        myServer.broadcastMsg(name + " has left the chat.");
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (isAuthorized()) {
+            myServer.unsubscribe(this);
+            myServer.broadcastMsg(name + " has left the chat.");
+        }
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
