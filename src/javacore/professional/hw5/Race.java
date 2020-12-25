@@ -4,38 +4,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
 
 public class Race {
     private final List<Stage> stages;
-    private final CyclicBarrier barrier;
     private final CountDownLatch preparationLatch;
     private final CountDownLatch startLatch;
     private final CountDownLatch finishLatch;
     private Car winner;
 
-    public Race(int carsCount, Stage... stages) {
+    public Race(int participantCount, Stage... stages) {
         this.stages = new ArrayList<>(Arrays.asList(stages));
-        this.barrier = new CyclicBarrier(carsCount);
-        this.preparationLatch = new CountDownLatch(carsCount);
+        this.preparationLatch = new CountDownLatch(participantCount);
         this.startLatch = new CountDownLatch(1);
-        this.finishLatch = new CountDownLatch(carsCount);
+        this.finishLatch = new CountDownLatch(participantCount);
     }
 
-    public Car getWinner() {
-        return winner;
-    }
-
-    public void setWinner(Car winner) {
-        this.winner = winner;
+    public synchronized void setWinner(Car winner) {
+        if (this.winner == null) {
+            this.winner = winner;
+            System.out.println(winner.getName() + " - WIN");
+        }
     }
 
     public List<Stage> getStages() {
         return stages;
-    }
-
-    public void awaitOthers() throws Exception {
-        barrier.await();
     }
 
     public void awaitPreparation() throws InterruptedException {
