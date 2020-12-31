@@ -1,4 +1,4 @@
-package javacore.advanced.hw4.task2.tests;
+package javacore.advanced.hw4.tests;
 
 import javacore.advanced.hw4.task2.expression.InfixExpCreator;
 import org.junit.jupiter.api.Test;

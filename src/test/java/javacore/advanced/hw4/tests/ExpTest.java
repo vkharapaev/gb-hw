@@ -1,4 +1,4 @@
-package javacore.advanced.hw4.task2.tests;
+package javacore.advanced.hw4.tests;
 
 import javacore.advanced.hw4.task2.expression.Exp;
 import org.junit.jupiter.api.Test;
@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class ExpTest {
 
